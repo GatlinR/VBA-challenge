@@ -1,0 +1,72 @@
+
+Sub stocks():
+Dim ws As Worksheet
+For Each ws In Worksheets
+    
+    Dim lastRow As Long
+    Dim ticher As String
+    Dim opening As Double
+    Dim closing As Double
+    Dim total As Double
+    Dim yearDif As Double
+    Dim yearPerDif As Double
+    Dim symbolRow As Long
+    
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Change by Year"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+        ws.Cells(1, 16).Value = "Ticker"
+        ws.Cells(1, 17).Value = "Value"
+        ws.Cells(2, 15).Value = "Greatest % Increase"
+        ws.Cells(3, 15).Value = "Greatest % Decrease"
+        ws.Cells(4, 15).Value = "Greatest Total Volume"
+        
+        lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        opening = 0
+        closing = 0
+        total = 0
+        yearDif = 0
+        yearPerDif = 0
+        total = 0
+        Row = 2
+        
+        For i = 2 To lastRow
+            
+            total = total + ws.Cells(i, 7).Value
+            
+            If ws.Cells(i, 1).Value <> ws.Cells(i - 1, 1).Value Then
+                opening = ws.Cells(i, 3).Value
+            End If
+            
+            If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+                ws.Cells(Row, 9).Value = ws.Cells(i, 1).Value
+                closing = ws.Cells(i, 6).Value
+                yearDif = closing - opening
+                ws.Cells(Row, 10).Value = yearDif
+                    If yearDif > 0 Then
+                            ws.Cells(Row, 10).Interior.ColorIndex = 4
+                    Else
+                            ws.Cells(Row, 10).Interior.ColorIndex = 3
+                    End If
+                
+                If opening <> 0 Then
+                    yearPerDif = yearDif / opening
+                    ws.Cells(Row, 11).Value = yearPerDif
+                    ws.Cells(Row, 11).NumberFormat = "0.00%"
+                        If yearPerDif > 0 Then
+                            ws.Cells(Row, 11).Interior.ColorIndex = 4
+                        Else
+                            ws.Cells(Row, 11).Interior.ColorIndex = 3
+                        End If
+                End If
+                ws.Cells(Row, 12).Value = total
+                Row = Row + 1
+                total = 0
+                opening = 0
+                closing = 0
+                yearDif = 0
+            End If
+        Next i
+    Next ws
+End Sub
